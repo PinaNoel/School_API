@@ -1,0 +1,32 @@
+
+// /Course/Curriculum/Create
+{
+    "name": "ic-1",
+    "career": "Ingeniería Civil",
+    "subjectsList": [
+        {
+            "semesterId": 100,
+            "subjects": [
+                "Álgebra Lineal", 
+                "Diseño de Bases de Datos", 
+                "Programación Orientada a Objetos", 
+                "Fundamentos Electrónicos para la Computación", 
+                "Ingeniería de Software", 
+                "Logros y Experiencias", 
+                "Lengua Extranjera"
+            ]
+        },
+        {
+            "semesterId": 101,
+            "subjects": [
+                "Precálculo", 
+                "Aprender a Aprender", 
+                "Desarrollo Sustentable y Medio Ambiente", 
+                "Fundamentos de Programación", 
+                "Matemáticas Discretas", 
+                "Conversaciones Introductorias", 
+                "Lengua Extranjera"
+            ]
+        }
+    ]
+}
