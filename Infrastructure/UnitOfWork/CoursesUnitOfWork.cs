@@ -2,13 +2,16 @@ using School_API.Infrastructure.Persistence;
 using School_API.Core.Models;
 using School_API.App.Interfaces;
 using School_API.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore.Storage;
+using School_API.Core.Exceptions;
+using School_API.App.DTO;
 
 namespace School_API.Infrastructure.UnitOfWork
 {
     public class CoursesUnitOfWork : ICoursesUnitOfWork
     {
         private readonly SchoolApiContext _context;
-        private CurriculumRepository _curriculumRepository { get; }
+        public CurriculumRepository CurriculumRepository { get; }
         private SemesterRepository _semesterRepository { get; }
         private CareerRepository _careerRepository { get; }
         private SubjectRepository _subjectRepository { get; }
@@ -17,73 +20,58 @@ namespace School_API.Infrastructure.UnitOfWork
         public CoursesUnitOfWork(SchoolApiContext context)
         {
             _context = context;
-            _curriculumRepository = new CurriculumRepository(_context);
+            CurriculumRepository = new CurriculumRepository(_context);
             _semesterRepository = new SemesterRepository(_context);
             _careerRepository = new CareerRepository(_context);
             _subjectRepository = new SubjectRepository(_context);
             CurriculumSubjects = new CurriculumSubjectsRepository(_context);
         }
 
-        public async Task<Curriculum?> AddCurriculum(string careerName, string curriculumName)
+
+        public async Task AddSubjects(Curriculum curriculum, SubjectAddDTO subjects)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
             try {
-                Career? career = await _careerRepository.GetByName(careerName);
-                if (career == null) return null;
 
-                Curriculum curriculum = new Curriculum{
-                    Name = curriculumName,
-                    CareerId = career.Id,
-                };
-
-                await _curriculumRepository.Add(curriculum);
-                await Save();
-
-                return curriculum;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("", ex);
-            }
-        }
-
-        public async Task AddCurriculumSubjects(Curriculum curriculum, int semesterId, List<string> subjects)
-        {
-            try {
                 List<Subject> subjectsList = new List<Subject>();
-                foreach (string subject in subjects)
+
+                foreach (string subject in subjects.Subjects)
                 {
-                    Subject newSubject = new Subject{ Name = subject };
+                    Subject newSubject = new Subject { Name = subject };
                     subjectsList.Add(newSubject);
                 }
 
                 await _subjectRepository.AddSubjectsList(subjectsList);
                 await Save();
 
-                List<CurriculumSubject> tableCurriculumSubject = new List<CurriculumSubject>();
+                List<CurriculumSubject> curriculumSubjects = new List<CurriculumSubject>();
+                
                 foreach (Subject subject in subjectsList)
                 {
                     CurriculumSubject curriculumSubject = new CurriculumSubject{
                         CurriculumId = curriculum.Id,
                         SubjectId = subject.Id,
-                        SemesterId = semesterId,
+                        SemesterId = subjects.SemesterId,
                     };
 
-                    tableCurriculumSubject.Add(curriculumSubject);
+                    curriculumSubjects.Add(curriculumSubject);
                 }
 
-                await CurriculumSubjects.AddList(tableCurriculumSubject);
+                await CurriculumSubjects.AddList(curriculumSubjects);
                 await Save();
+
+                await transaction.CommitAsync();
+
             }
             catch (Exception ex)
             {
-                throw new Exception("", ex);
+                await transaction.RollbackAsync();
+                throw new DataBaseException("An error occurred while accessing the database in Courses UnitOfWork", ex);
             }
         }
 
 
-
-        public async Task<int> Save()
-            => await _context.SaveChangesAsync();
+        public async Task<int> Save() => await _context.SaveChangesAsync();
 
 
         public void Dispose()

@@ -6,10 +6,10 @@ namespace School_API.App.Interfaces
 {
     public interface ICoursesUnitOfWork : IDisposable
     {
+        CurriculumRepository CurriculumRepository { get; }
         CurriculumSubjectsRepository CurriculumSubjects { get; }
 
-        Task<Curriculum?> AddCurriculum(string careerName, string curriculumName);
-        Task AddCurriculumSubjects(Curriculum curriculum, int semesterId, List<string> subjects);
+        Task AddSubjects(Curriculum curriculum, SubjectAddDTO subjects);
         Task<int> Save();
     }
 }

@@ -23,18 +23,12 @@ namespace School_API.Infrastructure.Repositories
 
         public async Task<List<SubjectDTO>> GetCurriculumSubjects(string curriculumName)
         {
-            try{
-                List<SubjectDTO> reply = await _context.CurriculumSubjects
-                    .Where(cs => cs.Curriculum.Name == curriculumName)
-                    .Select(cs => new SubjectDTO { Semester = cs.Semester.Name, Name = cs.Subject.Name } )
-                    .ToListAsync();
-                
-                return reply;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("", ex);
-            }
+            List<SubjectDTO> reply = await _context.CurriculumSubjects
+                .Where(cs => cs.Curriculum!.Name == curriculumName)
+                .Select(cs => new SubjectDTO { Semester = cs.Semester!.Name!, Name = cs.Subject!.Name! } )
+                .ToListAsync();
+            
+            return reply;
         }
     }
 }

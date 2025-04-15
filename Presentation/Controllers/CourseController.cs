@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using School_API.App.DTO;
@@ -9,58 +10,45 @@ namespace School_API.Presentation.Controllers{
     public class CourseController : Controller{
 
         private CourseService _courseService;
-        private readonly ILogger<CourseController> _logger;
 
-        public CourseController(CourseService courseService, ILogger<CourseController> logger)
+        public CourseController(CourseService courseService)
         {
             _courseService = courseService;
-            _logger = logger;
         }
         
         [HttpPost]
+        [ValidateModel]
+        [Authorize(Roles = "Admin")]
         [Route("[Controller]/Curriculum/Create")]
-        public async Task<IActionResult> CreateCurriculum([FromBody] CurriculumDTO curriculum)
+        public async Task<ActionResult<ApiResponse<Object>>> CreateCurriculum([FromBody] CurriculumCreateDTO curriculum)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest( new { code = 400, modelState = "Invalid" });
-                }
+            await _courseService.CreateCurriculum(curriculum);
 
-                await _courseService.CreateCurriculum(curriculum);
-
-                return Ok( new { code = 201, modelState = "Valid", response = "Ok" } );
-            }    
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode( 500, new { code = 500, response = ex.Message } );
-            }
+            return Ok( new ApiResponse<Object> {
+                StatusCode = 201,
+                Method = HttpContext.Request.Method,
+                Path = HttpContext.Request.Path,
+                } 
+            );
         }
 
 
         [HttpGet]
+        [ValidateModel]
         [Route("[Controller]/Curriculum")]
-        public async Task<IActionResult> GetCurriculum([FromQuery] string name)
+        public async Task<ActionResult<ApiResponse<CurriculumResponseDTO>>> GetCurriculum([FromQuery] string name)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest( new { code = 400, modelState = "Invalid" });
-                }
-                var curriculum = await _courseService.GetCurriculum(name);
+            CurriculumResponseDTO curriculum = await _courseService.GetCurriculum(name);
 
-                if (curriculum == null) return NotFound( new { code = 404, modelState = "Valid", response = "Not Found" });
 
-                return Ok( new { code = 200, modelState = "Valid", response = curriculum });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return StatusCode( 500, new { code = 500, response = ex.Message } );
-            }
+            return Ok( new ApiResponse<CurriculumResponseDTO> {
+                StatusCode = 201,
+                Method = HttpContext.Request.Method,
+                Path = HttpContext.Request.Path,
+                Data = curriculum
+                } 
+            );
+        
         }
     }
 }

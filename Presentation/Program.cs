@@ -1,9 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 using School_API.Infrastructure.Persistence;
 using School_API.App.Interfaces;
 using School_API.Infrastructure.UnitOfWork;
 using School_API.Infrastructure.Security;
 using School_API.App.Services;
+using School_API.Infrastructure.Middleware;
+using School_API.Infrastructure.Helpers;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,11 +28,49 @@ builder.Services.AddDbContext<SchoolApiContext>(
 );
 
 builder.Services.AddScoped<IHashProvider, HashProvider>();
-builder.Services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IStudentUnitOfWork, StudentUnitOfWork>();
+builder.Services.AddScoped<IAdminUnitOfWork, AdminUnitOfWork>();
 builder.Services.AddScoped<ICoursesUnitOfWork, CoursesUnitOfWork>();
 
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CourseService>();
+builder.Services.AddScoped<StudentService>();
+builder.Services.AddScoped<AdminService>();
+
+
+builder.Services.AddSingleton<JwtProvider>();
+builder.Services.AddHttpContextAccessor();
+
+var configuration = builder.Configuration;
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(option => {
+        option.RequireHttpsMetadata = false;
+        option.SaveToken = false;
+
+        string key = configuration["Jwt:Key"]!;
+        var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+
+        option.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = configuration["Jwt:Issuer"],
+            ValidAudience = configuration["Jwt:Audience"],
+            IssuerSigningKey = signingKey,
+            ClockSkew = TimeSpan.Zero
+        };
+
+        option.Events = new CustomJwtBearerEvents();
+    }
+);
+
+builder.Services.AddScoped<ContextHelper>();
+
+
+
 
 var app = builder.Build();
 
@@ -35,6 +80,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 // app.UseHttpsRedirection();
 app.MapControllers();

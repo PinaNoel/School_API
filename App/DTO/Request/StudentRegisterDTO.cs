@@ -1,6 +1,8 @@
+
+
 namespace School_API.App.DTO
 {
-    public class UserDTO
+    public class StudentRegisterDTO
     {
         public required string Name { get; set; }
 
@@ -11,5 +13,7 @@ namespace School_API.App.DTO
         public required string Enrollment { get; set; }
 
         public required string Password { get; set; }
+
+        public required int CareerId { get; set; }
     }
 }

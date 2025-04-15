@@ -1,55 +1,47 @@
-using System.Linq;
+
 using School_API.App.DTO;
 using School_API.App.Interfaces;
+using School_API.Core.Exceptions;
 using School_API.Core.Models;
 namespace School_API.App.Services
 {
     public class CourseService
     {
         private ICoursesUnitOfWork _coursesUnitOfWork;
-        private ILogger _logger;
+        private IUnitOfWork _unitOfWork;
+        private string _sus => "ඞ";
 
-        public CourseService(ICoursesUnitOfWork coursesUnitOfWork, ILogger<CourseService> logger)
+        public CourseService(ICoursesUnitOfWork coursesUnitOfWork, IUnitOfWork unitOfWork)
         {
             _coursesUnitOfWork = coursesUnitOfWork;
-            _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
 
-
-
-        public async Task CreateCurriculum(CurriculumDTO curriculumDTO)
+        public async Task CreateCurriculum(CurriculumCreateDTO curriculumDTO)
         {
-            try
-            {
-                Curriculum? curriculum = await _coursesUnitOfWork.AddCurriculum(curriculumDTO.Career, curriculumDTO.Name);
-                if (curriculum == null) return;
+            Curriculum curriculum = new Curriculum{ Name = curriculumDTO.Name, CareerId = curriculumDTO.CareerId };
+            await _coursesUnitOfWork.CurriculumRepository.Add(curriculum);
+            await _coursesUnitOfWork.Save();
 
-                foreach (var subjectsList in curriculumDTO.SubjectsList)
-                {
-                    await _coursesUnitOfWork.AddCurriculumSubjects(curriculum, subjectsList.SemesterId, subjectsList.Subjects);
-                }
-            }
-            catch (Exception ex)
+            foreach (SubjectAddDTO subjectsList in curriculumDTO.SubjectsList)
             {
-                throw new Exception("", ex);
+                await _coursesUnitOfWork.AddSubjects(curriculum, subjectsList);
             }
         }
 
 
-        public async Task<CurriculumSubjecsDTO?> GetCurriculum(string curriculumName)
+        public async Task<CurriculumResponseDTO> GetCurriculum(string curriculumName)
         {
-            List<SubjectDTO> reply = await _coursesUnitOfWork.CurriculumSubjects.GetCurriculumSubjects(curriculumName);
+            List<SubjectDTO> reply = await _unitOfWork.CurriculumSubjectsRepository.GetCurriculumSubjects(curriculumName);
 
-            if (reply.Count == 0) return null;
+            if (reply.Count == 0) throw new NotFoundException("Curiculum not found");
 
-            List<SemesterSubjectsDTO> subjectsGroup = reply.GroupBy(r => r.Semester)
-                .Select(g => new SemesterSubjectsDTO { Semester = g.Key, Subjects = g.Select(s => s.Name).ToList() })
+            List<SubjectsPerSemesterDTO> subjectsGroup = reply.GroupBy(r => r.Semester)
+                .Select(g => new SubjectsPerSemesterDTO { Semester = g.Key, Subjects = g.Select(s => s.Name).ToList() })
                 .ToList();
             
-            CurriculumSubjecsDTO curriculum = new CurriculumSubjecsDTO{ Curriculum = curriculumName, Subjects = subjectsGroup };
-
-            return curriculum;
+            return new CurriculumResponseDTO{ Curriculum = curriculumName, Subjects = subjectsGroup };
         }
     }
 }
