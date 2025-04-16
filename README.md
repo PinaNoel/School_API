@@ -27,4 +27,4 @@ Autenticación basada en Json Web Token (JWT) con validacion de credenciales y c
 
 ## 🗃️ Diagrama de Base de Datos
 
-![Image](https://github.com/user-attachments/assets/246b12c3-0395-4d60-8517-209677232d64)
+![Data Base diagram](Docs/Diagram.png)
