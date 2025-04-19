@@ -43,5 +43,13 @@ namespace School_API.App.Services
             
             return new CurriculumResponseDTO{ Curriculum = curriculumName, Subjects = subjectsGroup };
         }
+
+        
+        public async Task AddPeriod(string periodName)
+        {
+            Period period = new Period{ Name = periodName };
+            await _unitOfWork.PeriodRepository.Add(period);
+            await _unitOfWork.Save();
+        }
     }
 }

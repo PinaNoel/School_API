@@ -1,6 +1,6 @@
-create database School_API;
+create database SchoolAPI;
 
-use School_API;
+use SchoolAPI;
 
 create table Users (
   Id int primary key identity(100, 1) not null,
@@ -51,16 +51,6 @@ create table Periods (
   Name nvarchar(255)
 );
 
-create table StudentsGroups (
-  Id int primary key identity(100, 1),
-  StudentId int,
-  GroupId int,
-  PeriodId int,
-
-  foreign key (StudentId) references Students(Id),
-  foreign key (GroupId) references Groups(Id),
-  foreign key (PeriodId) references Periods(Id)
-);
 
 
 ------
@@ -106,35 +96,46 @@ create table CurriculumSubjects (
 
 ----
 
-CREATE TABLE GroupSubjects (
+CREATE TABLE TeacherSubjects (
+	Id int primary key identity(100, 1),
+	TeacherId int,
+	SubjectId int,
+
+	foreign key (TeacherId) references Teacher(Id),
+	foreign key (SubjectId) references Subjects(Id)
+)
+
+CREATE TABLE GroupPeriods (
+	Id int primary key identity(100, 1),
+	PeriodId int,
+	GroupId int,
+
+	foreign key (PeriodId) references Periods(Id),
+	foreign key(GroupId) references Groups(Id)
+)
+
+CREATE TABLE ActualPeriodSubjects(
+	Id int primary key identity(100, 1),
+	TeacherSubjectsId int,
+	GroupPeriodsId int,
+
+	foreign key (TeacherSubjectsId) references TeacherSubjects(Id),
+	foreign key (GroupPeriodsId) references GroupPeriods(Id)
+)
+
+
+
+
+CREATE TABLE StudentsGroups (
   Id int primary key identity(100, 1),
-  SubjectId int,
   GradesId int,
-  StudentGroupId int,
-  TeacherId int,
+  StudentId int,
+  ActualPeriodSubjectsId int,
 
-  foreign key (SubjectId) references Subjects(Id),
   foreign key (GradesId) references Grades(Id),
-  foreign key (StudentGroupId) references StudentsGroups(Id),
-  foreign key (TeacherId) references Teacher(Id)
+  foreign key (StudentId) references Students(Id),
+  foreign key (ActualPeriodSubjectsId) references ActualPeriodSubjects(Id)
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -144,19 +145,19 @@ CREATE TABLE GroupSubjects (
 go
 insert into Careers(Name) values ('Ciencias Computacionales');
 insert into Careers(Name) values ('Arquitectura');
-insert into Careers(Name) values ('Ingenier�a Civil');
-insert into Careers(Name) values ('Ingenier�a Industrial');
-insert into Careers(Name) values ('F�sica y Tecnolog�a Avanzada');
+insert into Careers(Name) values ('Ingeniería Civil');
+insert into Careers(Name) values ('Ingeniería Industrial');
+insert into Careers(Name) values ('Física y Tecnología Avanzada');
 
 
-insert into dbo.Semesters(Name) values ('1� semestre');
-insert into dbo.Semesters(Name) values ('2� semestre');
-insert into dbo.Semesters(Name) values ('3� semestre');
-insert into dbo.Semesters(Name) values ('4� semestre');
-insert into dbo.Semesters(Name) values ('5� semestre');
-insert into dbo.Semesters(Name) values ('6� semestre');
-insert into dbo.Semesters(Name) values ('7� semestre');
-insert into dbo.Semesters(Name) values ('8� semestre');
-insert into dbo.Semesters(Name) values ('9� semestre');
-insert into dbo.Semesters(Name) values ('10� semestre');
+insert into dbo.Semesters(Name) values ('1º semestre');
+insert into dbo.Semesters(Name) values ('2º semestre');
+insert into dbo.Semesters(Name) values ('3º semestre');
+insert into dbo.Semesters(Name) values ('4º semestre');
+insert into dbo.Semesters(Name) values ('5º semestre');
+insert into dbo.Semesters(Name) values ('6º semestre');
+insert into dbo.Semesters(Name) values ('7º semestre');
+insert into dbo.Semesters(Name) values ('8º semestre');
+insert into dbo.Semesters(Name) values ('9º semestre');
+insert into dbo.Semesters(Name) values ('10º semestre');
 go

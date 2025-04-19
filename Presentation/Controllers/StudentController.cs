@@ -52,5 +52,13 @@ namespace School_API.Presentation.Controllers
                 }
             );
         }
+
+
+        [HttpPost]
+        [Route("[Controller]/Enrroll")]
+        public async Task<IActionResult> Enrroll(string enrroll, string curriculum)
+        {
+            return Ok();
+        }
     }
 }

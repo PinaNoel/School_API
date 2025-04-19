@@ -48,7 +48,21 @@ namespace School_API.Presentation.Controllers{
                 Data = curriculum
                 } 
             );
-        
+        }
+
+        [HttpPost]
+        [ValidateModel]
+        [Route("[Controller]/Period")]
+        public async Task<ActionResult<ApiResponse<Object>>> AddPeriod([FromBody] string period)
+        {
+            await _courseService.AddPeriod(period);
+            
+            return Ok( new ApiResponse<Object> {
+                StatusCode = 201,
+                Method = HttpContext.Request.Method,
+                Path = HttpContext.Request.Path,
+                } 
+            );
         }
     }
 }

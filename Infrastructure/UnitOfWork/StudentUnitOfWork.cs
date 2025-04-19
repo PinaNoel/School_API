@@ -13,6 +13,7 @@ namespace School_API.Infrastructure.UnitOfWork
         private readonly SchoolApiContext _context;
         public UserRepository UserRepository { get; }
         public StudentRepository StudentRepository { get; }
+        private PeriodRepository _periodRepository { get; }
         private CareerRepository _careerRepository { get; }
         private TeacherRepository _teacherRepository { get; }
 
@@ -21,6 +22,7 @@ namespace School_API.Infrastructure.UnitOfWork
             _context = context;
             UserRepository = new UserRepository(_context);
             StudentRepository = new StudentRepository(_context);
+            _periodRepository = new PeriodRepository(_context);
             _careerRepository = new CareerRepository(_context);
             _teacherRepository = new TeacherRepository(_context);
         }

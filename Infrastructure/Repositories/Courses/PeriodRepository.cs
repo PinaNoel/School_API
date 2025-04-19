@@ -18,5 +18,10 @@ namespace School_API.Infrastructure.Repositories
         {
             return await _context.Periods.OrderByDescending(p => p.Id).FirstOrDefaultAsync();
         }
+
+        public async Task Add(Period period)
+        {
+            await _context.Periods.AddAsync(period);
+        }
     }
 }
