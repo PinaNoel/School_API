@@ -9,5 +9,5 @@ public partial class Period
 
     public string? Name { get; set; }
 
-    public virtual ICollection<StudentsGroup> StudentsGroups { get; set; } = new List<StudentsGroup>();
+    public virtual ICollection<GroupPeriod> GroupPeriods { get; set; } = new List<GroupPeriod>();
 }

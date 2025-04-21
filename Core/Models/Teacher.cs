@@ -13,7 +13,7 @@ public partial class Teacher
 
     public int? UserId { get; set; }
 
-    public virtual ICollection<GroupSubject> GroupSubjects { get; set; } = new List<GroupSubject>();
+    public virtual ICollection<TeacherSubject> TeacherSubjects { get; set; } = new List<TeacherSubject>();
 
     public virtual User? User { get; set; }
 }

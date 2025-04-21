@@ -13,5 +13,5 @@ public partial class Grade
 
     public decimal? Unit3 { get; set; }
 
-    public virtual ICollection<GroupSubject> GroupSubjects { get; set; } = new List<GroupSubject>();
+    public virtual ICollection<StudentsGroup> StudentsGroups { get; set; } = new List<StudentsGroup>();
 }
