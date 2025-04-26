@@ -14,7 +14,10 @@ namespace School_API.Infrastructure.UnitOfWork
         public TeacherRepository TeacherRepository { get; }
         public UserRepository UserRepository { get; }
         public CurriculumSubjectsRepository CurriculumSubjectsRepository { get; }
-        public PeriodRepository PeriodRepository{ get; }
+        public PeriodRepository PeriodRepository { get; }
+        public CareerRepository CareerRepository { get; }
+        public GroupPeriodsRepository GroupPeriodsRepository { get; }
+        public SubjectRepository SubjectRepository { get; }
 
 
         public UnitOfWork(SchoolApiContext context)
@@ -26,6 +29,9 @@ namespace School_API.Infrastructure.UnitOfWork
             UserRepository = new UserRepository(_context);
             CurriculumSubjectsRepository = new CurriculumSubjectsRepository(_context);
             PeriodRepository = new PeriodRepository(_context);
+            CareerRepository = new CareerRepository(_context);
+            GroupPeriodsRepository = new GroupPeriodsRepository(_context);
+            SubjectRepository = new SubjectRepository(_context);
         }
 
         public async Task Save() => await _context.SaveChangesAsync();

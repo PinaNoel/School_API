@@ -2,7 +2,6 @@
 using School_API.App.DTO;
 using School_API.Core.Models;
 using School_API.App.Interfaces;
-using School_API.Core.Security;
 using School_API.Infrastructure.Helpers;
 using School_API.Core.Exceptions;
 

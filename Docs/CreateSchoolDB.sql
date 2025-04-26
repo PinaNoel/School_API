@@ -143,6 +143,8 @@ CREATE TABLE StudentsGroups (
 -- statics
 
 go
+
+-- Careers
 insert into Careers(Name) values ('Ciencias Computacionales');
 insert into Careers(Name) values ('Arquitectura');
 insert into Careers(Name) values ('Ingeniería Civil');
@@ -150,6 +152,7 @@ insert into Careers(Name) values ('Ingeniería Industrial');
 insert into Careers(Name) values ('Física y Tecnología Avanzada');
 
 
+-- Semesters
 insert into dbo.Semesters(Name) values ('1º semestre');
 insert into dbo.Semesters(Name) values ('2º semestre');
 insert into dbo.Semesters(Name) values ('3º semestre');
@@ -160,4 +163,38 @@ insert into dbo.Semesters(Name) values ('7º semestre');
 insert into dbo.Semesters(Name) values ('8º semestre');
 insert into dbo.Semesters(Name) values ('9º semestre');
 insert into dbo.Semesters(Name) values ('10º semestre');
+
+
+-- Ciencias Computacionales groups
+insert into dbo.Groups(Name) values ('1CCG1');
+insert into dbo.Groups(Name) values ('1CCG2');
+insert into dbo.Groups(Name) values ('1CCG3');
+insert into dbo.Groups(Name) values ('1CCG4');
+insert into dbo.Groups(Name) values ('1CCG5');
+insert into dbo.Groups(Name) values ('1CCG6');
+insert into dbo.Groups(Name) values ('1CCG7');
+insert into dbo.Groups(Name) values ('1CCG8');
+insert into dbo.Groups(Name) values ('1CCG9');
+
+insert into dbo.Groups(Name) values ('2CCG1');
+insert into dbo.Groups(Name) values ('2CCG2');
+insert into dbo.Groups(Name) values ('2CCG3');
+insert into dbo.Groups(Name) values ('2CCG4');
+insert into dbo.Groups(Name) values ('2CCG5');
+insert into dbo.Groups(Name) values ('2CCG6');
+insert into dbo.Groups(Name) values ('2CCG7');
+insert into dbo.Groups(Name) values ('2CCG8');
+insert into dbo.Groups(Name) values ('2CCG9');
+
+insert into dbo.Groups(Name) values ('3CCG1');
+insert into dbo.Groups(Name) values ('3CCG2');
+insert into dbo.Groups(Name) values ('3CCG3');
+insert into dbo.Groups(Name) values ('3CCG4');
+insert into dbo.Groups(Name) values ('3CCG5');
+insert into dbo.Groups(Name) values ('3CCG6');
+insert into dbo.Groups(Name) values ('3CCG7');
+insert into dbo.Groups(Name) values ('3CCG8');
+insert into dbo.Groups(Name) values ('3CCG9');
+
 go
+

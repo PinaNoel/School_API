@@ -9,7 +9,10 @@ namespace School_API.App.Interfaces
         TeacherRepository TeacherRepository { get; }
         UserRepository UserRepository { get; }
         CurriculumSubjectsRepository CurriculumSubjectsRepository { get; }
-        PeriodRepository PeriodRepository{ get; }
+        PeriodRepository PeriodRepository { get; }
+        CareerRepository CareerRepository  { get; }
+        GroupPeriodsRepository GroupPeriodsRepository { get; }
+        SubjectRepository SubjectRepository { get; }
         Task Save();
     }
 }

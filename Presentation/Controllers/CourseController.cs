@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using School_API.App.DTO;
 using School_API.App.Services;
 
@@ -62,6 +61,82 @@ namespace School_API.Presentation.Controllers{
                 Method = HttpContext.Request.Method,
                 Path = HttpContext.Request.Path,
                 } 
+            );
+        }
+
+
+        [HttpGet]
+        [Route("Careers")]
+        public async Task<ActionResult<ApiResponse<List<CareerResponseDTO>>>> GetCareers()
+        {
+            List<CareerResponseDTO> careers = await _courseService.GetCareers();
+
+            return Ok( new ApiResponse<List<CareerResponseDTO>> {
+                StatusCode = 201,
+                Method = HttpContext.Request.Method,
+                Path = HttpContext.Request.Path,
+                Data = careers
+                } 
+            );
+        }
+
+        [HttpGet]
+        [Route("Groups")]
+        public async Task<ActionResult<ApiResponse<List<CareerResponseDTO>>>> GetGroups()
+        {
+            List<GroupResponseDTO> groups = await _courseService.GetGroups();
+
+            return Ok( new ApiResponse<List<GroupResponseDTO>> {
+                StatusCode = 201,
+                Method = HttpContext.Request.Method,
+                Path = HttpContext.Request.Path,
+                Data = groups
+                } 
+            );
+        }
+
+        [HttpGet]
+        [Route("Periods")]
+        public async Task<ActionResult<ApiResponse<List<PeriodResponseDTO>>>> GetPeriods()
+        {
+            List<PeriodResponseDTO> periods = await _courseService.GetPeriods();
+
+            return Ok( new ApiResponse<List<PeriodResponseDTO>> {
+                StatusCode = 201,
+                Method = HttpContext.Request.Method,
+                Path = HttpContext.Request.Path,
+                Data = periods
+                }
+            );
+        }
+
+        [HttpPost]
+        [Route("RegisterGroupPeriods")]
+        public async Task<ActionResult<ApiResponse<int>>> RegisterGroupPeriods([FromBody] RegisterGroupPeriodsDTO register)
+        {
+            int groupPeriodId = await _courseService.RegisterNewGroupPeriod(register);
+
+            return Ok( new ApiResponse<int> {
+                StatusCode = 201,
+                Method = HttpContext.Request.Method,
+                Path = HttpContext.Request.Path,
+                Data = groupPeriodId
+                }
+            );
+        }
+
+        [HttpGet]
+        [Route("SubjectsByPeriod")]
+        public async Task<ActionResult<ApiResponse<List<int>>>> GetSubjectsByPeriod(SubjectsByPeriodDTO data)
+        {
+            List<int> idList = await _courseService.GetSubjectsByPeriod(data);
+
+            return Ok( new ApiResponse<List<int>> {
+                StatusCode = 201,
+                Method = HttpContext.Request.Method,
+                Path = HttpContext.Request.Path,
+                Data = idList
+                }
             );
         }
     }

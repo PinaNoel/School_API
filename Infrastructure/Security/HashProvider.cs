@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using School_API.App.Interfaces;
-using School_API.Core.Security;
+using School_API.App.DTO;
 
 namespace School_API.Infrastructure.Security
 {

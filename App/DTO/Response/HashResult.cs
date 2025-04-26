@@ -1,5 +1,5 @@
 
-namespace School_API.Core.Security 
+namespace School_API.App.DTO 
 {
     public class HashResult
     {

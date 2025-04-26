@@ -32,11 +32,13 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IStudentUnitOfWork, StudentUnitOfWork>();
 builder.Services.AddScoped<IAdminUnitOfWork, AdminUnitOfWork>();
 builder.Services.AddScoped<ICoursesUnitOfWork, CoursesUnitOfWork>();
+builder.Services.AddScoped<ITeacherUnitOfWork, TeacherUnitOfWork>();
 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CourseService>();
 builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<TeacherService>();
 
 
 builder.Services.AddSingleton<JwtProvider>();

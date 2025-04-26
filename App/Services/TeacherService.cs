@@ -1,24 +1,25 @@
 
-using School_API.App.DTO;
 using School_API.App.Interfaces;
+using School_API.App.DTO;
 using School_API.Core.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace School_API.App.Services
 {
-    public class AdminService
+    public class TeacherService
     {
-
-        private IAdminUnitOfWork _adminUnitOfWork;
+        
+        private ITeacherUnitOfWork _teacherUnitOfWork;
         private IHashProvider _hashProvider;
 
-        public AdminService(IAdminUnitOfWork adminUnitOfWork, IHashProvider hashProvider)
+        public TeacherService(ITeacherUnitOfWork teacherUnitOfWork, IHashProvider hashProvider)
         {
+            _teacherUnitOfWork = teacherUnitOfWork;
             _hashProvider = hashProvider;
-            _adminUnitOfWork = adminUnitOfWork;
         }
 
 
-        public async Task Register(AdminRegisterDTO user)
+        public async Task Register(TeacherRegisterDTO user)
         {
             byte[] salt = _hashProvider.GenerateSalt();
             HashResult hash = _hashProvider.Hash(salt, user.Password);
@@ -31,7 +32,7 @@ namespace School_API.App.Services
                 Enrollment = user.Enrollment,
                 Salt = hash.Salt,
                 Password = hash.Hash,
-                Role = "Admin",
+                Role = "Teacher",
                 IsActive = true
             };
 
@@ -40,7 +41,12 @@ namespace School_API.App.Services
                 Speciality = user.Speciality,
             };
 
-            await _adminUnitOfWork.Register(newUser, newTeacher);
+            await _teacherUnitOfWork.Register(newUser, newTeacher);
+        }
+
+        public async Task AssignSubject(TeacherAssignSubjectDTO teacherAssign)
+        {
+            await _teacherUnitOfWork.AssignSubject(teacherAssign);
         }
     }
 }

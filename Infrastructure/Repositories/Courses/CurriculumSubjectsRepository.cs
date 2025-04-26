@@ -25,7 +25,7 @@ namespace School_API.Infrastructure.Repositories
         {
             List<SubjectDTO> reply = await _context.CurriculumSubjects
                 .Where(cs => cs.Curriculum!.Name == curriculumName)
-                .Select(cs => new SubjectDTO { Semester = cs.Semester!.Name!, Name = cs.Subject!.Name! } )
+                .Select(cs => new SubjectDTO { Semester = cs.Semester!.Name!, Id = cs.Subject!.Id, Name = cs.Subject!.Name! } )
                 .ToListAsync();
             
             return reply;
